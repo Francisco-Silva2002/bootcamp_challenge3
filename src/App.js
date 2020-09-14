@@ -14,22 +14,21 @@ import {
 
 export default function App() {
   const [repositories, setRepositories] = useState([]);
-  const [likeAction, setLikeAction] = useState(false);
 
   useEffect(() => {
     api.get("repositories").then((response) => {
       setRepositories(response.data);
     });
-  }, [likeAction]);
+  }, []);
 
   async function handleLikeRepository(id) {
     const response = await api.post(`repositories/${id}/like`);
 
-    const message = response.data.message;
+    const repository = response.data;
 
-    Alert.alert(message);
-
-    setLikeAction(!likeAction);
+    setRepositories(
+      repositories.map((rep) => (rep.id === repository.id ? repository : rep))
+    );
   }
 
   return (
